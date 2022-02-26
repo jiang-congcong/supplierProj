@@ -4,4 +4,98 @@
 
 <mapper namespace="com.cn.deformityproj.dao.GoodsDAO">
 
+    <insert id="addGoodsInfo" parameterType="java.util.Map">
+        insert into t_goods(GOODS_ID,GOODS_NAME,GOODS_IMAGE,GOODS_SUPPLIER_ID,GOODS_PRICE,GOODS_SKU,GOODS_CATALOG_ID,GOODS_DESCRIBE,VALID_STATE)
+        values
+        (#{goodsId},#{goodsName},#{goodsImage},#{goodsSupplierId},${goodsPrice},${goodsSku},#{goodsCatalogId},#{goodsDescribe},'1')
+    </insert>
+
+    <select id="queryGoodsList" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct
+        t1.GOODS_ID goodsId,
+        t1.GOODS_NAME goodsName,
+        t1.GOODS_IMAGE goodsImage,
+        t1.GOODS_SUPPLIER_ID goodsSupplierId,
+        t1.GOODS_PRICE goodsPrice,
+        t1.GOODS_SKU goodsSku,
+        t1.GOODS_CATALOG_ID goodsCatalogId,
+        t1.GOODS_DESCRIBE goodsDescribe,
+        t2.SUPPLIER_NAME goodsSupplierName
+        from
+        t_goods t1
+        inner join t_supplier t2 on t1.GOODS_SUPPLIER_ID = t2.SUPPLIER_ID and t2.VALID_STATE = '1'
+        where
+        t1.VALID_STATE = '1'
+        <if test="goodsName != null and goodsName !=''">
+            and LOCATE(#{goodsName},t1.`GOODS_NAME`)>0
+        </if>
+        limit ${start} ${size}
+    </select>
+
+    <select id="queryGoodsListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(1) total
+        from
+        t_goods
+        where
+        VALID_STATE = '1'
+        <if test="goodsName != null and goodsName !=''">
+            and LOCATE(#{goodsName},`GOODS_NAME`)>0
+        </if>
+        limit ${start} ${size}
+    </select>
+
+    <insert id="bugGoods" parameterType="java.util.Map">
+        insert into t_order(ORDER_ID,GOODS_ID,GOODS_NUM,ORDER_USER_ID,VALID_STATE)
+        values
+        (#{orderId},#{goodsId},#{goodsNum},#{userId},'1')
+    </insert>
+
+    <select id="queryGoodsInfoByGoodsId" parameterType="java.lang.String" resultType="java.util.Map">
+        select
+        GOODS_ID goodsId,
+        GOODS_SKU skuNum
+        from
+        t_goods
+        where
+        VALID_STATE = '1'
+        and GOODS_ID = #{goodsId}
+    </select>
+
+    <update id="updateGoodsSku" parameterType="java.util.Map">
+        update
+        t_goods
+        set
+        GOODS_SKU = #{goodsSku}
+        where
+        VALID_STATE = '1'
+        and GOODS_ID = #{goodsId}
+    </update>
+
+    <update id="updateGoodsInfo" parameterType="java.util.Map">
+        update
+        t_goods
+        set
+        GOODS_NAME = #{goodsName},
+        GOODS_IMAGE = #{goodsImage},
+        GOODS_SUPPLIER_ID = #{goodsSupplierId},
+        GOODS_PRICE = #{goodsPrice},
+        GOODS_CATALOG_ID = #{goodsCatalogId},
+        GOODS_DESCRIBE = #{goodsDescribe}
+        where
+        VALID_STATE = '1'
+        and GOODS_ID = #{goodsId}
+    </update>
+
+    <update id="deleteGoodsInfo" parameterType="java.lang.String">
+        update
+        t_goods
+        set
+        VALID_STATE = '0'
+        where
+        VALID_STATE = '1'
+        and GOODS_ID = #{goodsId}
+    </update>
+
 </mapper>

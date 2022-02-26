@@ -44,30 +44,21 @@ public class SupplierSVImpl implements ISupplierSV {
         try {
             int total = supplierDAO.querySupplierListTotal(reqMap);
             if (total > 0) {
-                resultMap.put("total", total);
                 resultList = supplierDAO.querySupplierList(reqMap);
                 if (null != resultList && resultList.size() > 0) {
                     for (Map<String, Object> eachMap : resultList) {
                         Map<String, Object> goodType = new HashMap<>();
                         String supplierGoods = (String) eachMap.get("supplierGoods");
-                        String[] supplierGoodsArr = supplierGoods.split(",");
-                        for (String str : supplierGoodsArr) {
-                            if (null != goodsIdToTypeName.get(str)) {
-                                goodType.put("catalogId", str);
-                                goodType.put("catalogName", goodsIdToTypeName.get(str));
-                            } else {
-                                goodType.put("catalogId", str);
-                                goodType.put("catalogName", "其他器械类型");
-                            }
-                        }
+
                         eachMap.put("supplierGoods", goodType);
                     }
                 }
 
             }
+            resultMap.put("total", total);
             resultMap.put("supplierList", resultList);
         } catch (Exception e) {
-            logger.error("保存供应商数据失败：" + e);
+            logger.error("查询供应商数据失败：" + e);
             throw new Exception(e);
         }
         return resultMap;
