@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.deformityproj.dao.UserDAO">
+
+    <insert id="register" parameterType="java.util.Map">
+        insert into
+        t_user(USER_NAME,USER_PASSWORD,USER_ID,VALID_STATE,ROLE_TYPE)
+        values
+        (#{username},#{password},#{userId},'1','01')
+    </insert>
+
+    <select id="checkUsernameIsRegister" parameterType="java.lang.String" resultType="java.lang.String">
+        select
+        USER_NAME
+        from
+        t_user
+        where
+        USER_NAME = #{username}
+        and VALID_STATE = '1'
+    </select>
+
+    <select id="queryUserPassword" parameterType="java.lang.String" resultType="java.util.Map">
+        select
+        distinct
+        USER_NAME userName,
+        USER_PASSWORD password,
+        USER_ID userId
+        from t_user
+        where
+        USER_NAME = #{userName}
+        and VALID_STATE = '1'
+    </select>
+
+    <select id="queryUserList" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct
+        USER_ID userId,
+        USER_NAME userName,
+        USER_PHONE userPhone,
+        USER_ADDRESS userAddress,
+        USER_DESC userDescribe,
+        ROLE_TYPE roleType
+        from t_user
+        where
+        VALID_STATE = '1'
+        limit ${start} ${size}
+    </select>
+
+    <select id="queryUserListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(1) total
+        from t_user
+        where
+        VALID_STATE = '1'
+    </select>
+
+    <insert id="addUser" parameterType="java.util.Map">
+        insert into t_user(USER_ID,USER_NAME,USER_PHONE,USER_ADDRESS,USER_DESC,VALID_STATE,ROLE_TYPE)
+        values
+        (#{userId},#{userName},#{userPhone},#{userAddress},#{userDescribe},'1','02')
+    </insert>
+
+    <delete id="deleteUser" parameterType="java.lang.String">
+        update
+        t_user
+        set
+        VALID_STATE = '0'
+        where
+        USER_ID = #{userId}
+        and VALID_STATE = '1'
+    </delete>
+
+    <update id="updateUser" parameterType="java.util.Map">
+        update
+        t_user
+        set
+        USER_NAME = #{userName},
+        USER_PHONE = #{userPhone},
+        USER_ADDRESS = #{userAddress},
+        USER_DESC = #{userDescribe}
+        where
+        USER_ID = #{userId}
+        and VALID_STATE = '1'
+    </update>
+
+</mapper>

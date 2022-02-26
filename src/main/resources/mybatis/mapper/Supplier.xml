@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.deformityproj.dao.SupplierDAO">
+
+    <insert id="addSupplierInfo" parameterType="java.util.Map">
+        insert into t_supplier(SUPPLIER_ID,SUPPLIER_NAME,SUPPLIER_PHONE,SUPPLIER_ADDRESS,SUPPLIER_DESCRIBE,SUPPLIER_GOODS,VALID_STATE)
+        values
+        (#{supplierId},#{supplierName},#{supplierPhone},#{supplierAddress},#{supplierDescribe},#{supplierGoods},'1')
+    </insert>
+
+    <select id="querySupplierList" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct
+        SUPPLIER_ID supplierId,
+        SUPPLIER_NAME supplierName,
+        SUPPLIER_PHONE supplierPhone,
+        SUPPLIER_ADDRESS supplierAddress,
+        SUPPLIER_DESCRIBE supplierDescribe,
+        SUPPLIER_GOODS supplierGoods
+        from
+        t_supplier
+        where
+        VALID_STATE = '1'
+        <if test="supplierPhone != null and supplierPhone !=''">
+            and SUPPLIER_PHONE = #{supplierPhone}
+        </if>
+        limit ${start} ${size}
+    </select>
+
+    <select id="querySupplierListTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(1) total
+        from
+        t_supplier
+        where
+        VALID_STATE = '1'
+        <if test="supplierPhone != null and supplierPhone !=''">
+            and SUPPLIER_PHONE = #{supplierPhone}
+        </if>
+    </select>
+
+    <delete id="deleteSupplier" parameterType="java.lang.String">
+        update
+        t_supplier
+        set
+        VALID_STATE = '0'
+        where
+        SUPPLIER_ID = #{supplierId}
+        and VALID_STATE = '1'
+    </delete>
+
+    <update id="updateSupplier" parameterType="java.util.Map">
+        update
+        t_supplier
+        set
+        SUPPLIER_NAME = #{supplierName},
+        SUPPLIER_PHONE = #{supplierPhone},
+        SUPPLIER_ADDRESS = #{supplierAddress},
+        SUPPLIER_DESCRIBE = #{supplierDescribe},
+        SUPPLIER_GOODS = #{supplierGoods}
+        where
+        SUPPLIER_ID = #{supplierId}
+        and VALID_STATE = '1'
+    </update>
+
+</mapper>
