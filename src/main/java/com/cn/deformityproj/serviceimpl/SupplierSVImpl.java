@@ -2,6 +2,7 @@ package com.cn.deformityproj.serviceimpl;
 
 import com.cn.deformityproj.dao.SupplierDAO;
 import com.cn.deformityproj.iservice.ISupplierSV;
+import com.xiaoleilu.hutool.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,11 @@ public class SupplierSVImpl implements ISupplierSV {
     public Map<String, Object> querySupplierList(Map<String, Object> reqMap) throws Exception {
         Map<String, Object> goodsIdToTypeName = new HashMap<>();
         goodsIdToTypeName.put("1", "轮椅");
-        goodsIdToTypeName.put("2", "助听器");
+        goodsIdToTypeName.put("2", "假肢");
+        goodsIdToTypeName.put("3", "手杖");
+        goodsIdToTypeName.put("4", "矫形器");
+        goodsIdToTypeName.put("5", "盲人打字机");
+        goodsIdToTypeName.put("6", "助听器");
         Map<String, Object> resultMap = new HashMap<>();
         List<Map<String, Object>> resultList = new ArrayList<>();
         try {
@@ -47,10 +52,21 @@ public class SupplierSVImpl implements ISupplierSV {
                 resultList = supplierDAO.querySupplierList(reqMap);
                 if (null != resultList && resultList.size() > 0) {
                     for (Map<String, Object> eachMap : resultList) {
-                        Map<String, Object> goodType = new HashMap<>();
                         String supplierGoods = (String) eachMap.get("supplierGoods");
-
-                        eachMap.put("supplierGoods", goodType);
+                        List<Map<String,Object>> goodsTypeList = new ArrayList<>();
+                        if(!StrUtil.hasEmpty(supplierGoods)){
+                            String[] strArr = supplierGoods.split(",");
+                            for(String str:strArr){
+                                Map<String,Object> goodsTypeMap = new HashMap<>();
+                                goodsTypeMap.put("catalogId",str);
+                                goodsTypeMap.put("catalogName",goodsIdToTypeName.get(str));
+                                goodsTypeList.add(goodsTypeMap);
+                            }
+                            eachMap.put("supplierGoods", goodsTypeList);
+                        }
+                        else{
+                            eachMap.put("supplierGoods", goodsTypeList);
+                        }
                     }
                 }
 

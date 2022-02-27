@@ -26,7 +26,7 @@
         <if test="supplierPhone != null and supplierPhone !=''">
             and SUPPLIER_PHONE = #{supplierPhone}
         </if>
-        limit ${start} ${size}
+        limit ${start} , ${size}
     </select>
 
     <select id="querySupplierListTotal" parameterType="java.util.Map" resultType="java.lang.Integer">

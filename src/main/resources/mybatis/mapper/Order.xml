@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.deformityproj.dao.OrderDAO">
+
+    <select id="queryOrderList" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct
+        t1.ORDER_ID orderId,
+        t1.GOODS_ID goodsId,
+        t1.GOODS_NUM goodsNum,
+        t2.GOODS_IMAGE goodsImage,
+        t2.GOODS_PRICE goodsPrice,
+        t2.GOODS_NAME goodsName
+        from
+        t_order t1
+        inner join t_goods t2 on t1.GOODS_ID = t2.GOODS_ID and t2.VALID_STATE = '1'
+        where
+        t1.VALID_STATE = '1'
+        <if test="orderId != null and orderId != ''">
+            and t1.ORDER_ID = #{orderId}
+        </if>
+        limit ${start} , ${size}
+    </select>
+
+    <select id="queryOrderListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(1) total
+        from
+        t_order t1
+        inner join t_goods t2 on t1.GOODS_ID = t2.GOODS_ID and t2.VALID_STATE = '1'
+        where
+        t1.VALID_STATE = '1'
+        <if test="orderId != null and orderId != ''">
+            and t1.ORDER_ID = #{orderId}
+        </if>
+    </select>
+
+</mapper>

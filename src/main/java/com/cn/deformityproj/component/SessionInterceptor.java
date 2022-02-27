@@ -1,7 +1,12 @@
 package com.cn.deformityproj.component;
 
+import com.cn.deformityproj.config.RedisConfig;
+import com.cn.deformityproj.utils.CommonUtils;
+import com.cn.deformityproj.utils.RedisOperationUtils;
+import com.xiaoleilu.hutool.util.StrUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,6 +24,9 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     public static Logger log = LoggerFactory.getLogger(SessionInterceptor.class);
 
+    @Autowired
+    private RedisOperationUtils redisOperationUtils;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("=============呜呜啦啦，进入拦截器了=================================");
@@ -34,7 +42,7 @@ public class SessionInterceptor implements HandlerInterceptor {
 
         response.setHeader("Access-Control-Allow-Headers", "*");
 
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Origin", "*");
 
         response.setHeader("Content-Type", "application/json");
 
@@ -42,8 +50,11 @@ public class SessionInterceptor implements HandlerInterceptor {
             log.info("调用接口拦截验证登陆信息不存在，说明状态为未登陆！");
             return false;
         }else{
+            if(!redisOperationUtils.hasKey(authorization)){ //redis中不存在
+                log.info("登陆信息过期，说明状态为未登陆！");
+                return false;
+            }
             return true;
-
         }
     }
     //请求处理后，渲染ModelAndView前调用

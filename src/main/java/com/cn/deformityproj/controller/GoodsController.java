@@ -45,12 +45,12 @@ public class GoodsController {
             result.setMessage("商品名称或商品图片或供应商id或商品类型id或商品描述不能为空！");
             return result;
         }
-        if(null == reqMap.get("goodsPrice")||null == reqMap.get("goodsSku")|| (float)reqMap.get("goodsPrice")<0 || (int) reqMap.get("goodsSku")<0){
+        if(null == reqMap.get("goodsPrice")||null == reqMap.get("goodsSku")|| (int)reqMap.get("goodsPrice")<0 || (int) reqMap.get("goodsSku")<0){
             result.setCode(400);
             result.setMessage("商品价格、库存均不能为空且大于0！");
             return result;
         }
-        reqMap.put("goodsPrice",new BigDecimal(Float.toString((float)reqMap.get("goodsPrice"))));
+        reqMap.put("goodsPrice",new BigDecimal(Integer.toString((int)reqMap.get("goodsPrice"))));
         reqMap.put("goodsId",commonUtils.createAllId());
         reqMap.put("goodsImage",commonUtils.dealbase64ToImagePath(goodsImage));
         try {
@@ -75,7 +75,7 @@ public class GoodsController {
             result.setMessage("分页参数不能为空");
             return result;
         }
-        int page = (int)reqMap.get("page");
+        int page = (int)reqMap.get("page")-1;
         int size = (int)reqMap.get("size");
         reqMap.put("start",page*size);
         try {
@@ -194,11 +194,12 @@ public class GoodsController {
             result.setMessage("商品id或商品名称或商品图片或供应商id或商品类型id或商品描述不能为空！");
             return result;
         }
-        if (null == reqMap.get("goodsPrice") || (float) reqMap.get("goodsPrice") < 0) {
+        if (null == reqMap.get("goodsPrice") || (int) reqMap.get("goodsPrice") < 0) {
             result.setCode(400);
             result.setMessage("商品价格不能为空且大于0！");
             return result;
         }
+        reqMap.put("goodsPrice",new BigDecimal(Integer.toString((int)reqMap.get("goodsPrice"))));
         try {
             iGoodsSV.updateGoods(reqMap);
             result.setCode(200);

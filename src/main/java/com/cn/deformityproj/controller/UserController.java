@@ -36,17 +36,16 @@ public class UserController {
 
     public static Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping(method = RequestMethod.POST,value = "register")
+    @RequestMapping(method = RequestMethod.POST,value = "/register")
     @ResponseBody
     @ApiOperation(value = "用户注册")
     public Result register(@RequestBody Map<String,Object> reqMap){
         Result result = new Result();
         String username = (String)reqMap.get("username");
         String password = (String)reqMap.get("password");
-        String phoneNum = (String)reqMap.get("phone");
-        if(StrUtil.hasEmpty(username)||StrUtil.hasEmpty(password)||StrUtil.hasEmpty(phoneNum)){
+        if(StrUtil.hasEmpty(username)||StrUtil.hasEmpty(password)){
             result.setCode(400);
-            result.setMessage("用户名或密码或手机号不能为空！");
+            result.setMessage("用户名或密码不能为空！");
             return result;
         }
         try{
@@ -101,6 +100,7 @@ public class UserController {
                     resultMap.put("adminName",queryUserInfoMap.get("userName"));
                     result.setMessage("登陆成功！");
                     result.setData(resultMap);
+                    redisOperationUtils.set(token,userId,24*60*60);//token数据保存入缓存,1天过期
                 }
                 else{
                     result.setCode(400);
@@ -151,7 +151,7 @@ public class UserController {
             result.setMessage("分页参数不能为空");
             return result;
         }
-        int page = (int)reqMap.get("page");
+        int page = (int)reqMap.get("page")-1;
         int size = (int)reqMap.get("size");
         reqMap.put("start",page*size);
         Map<String, Object> resultMap;
@@ -173,7 +173,7 @@ public class UserController {
     @ApiOperation(value = "用户注册")
     public Result addUser(@RequestBody Map<String,Object> reqMap) throws Exception {
         Result result = new Result();
-        String username = (String) reqMap.get("username");
+        String username = (String) reqMap.get("userName");
         String userPhone = (String) reqMap.get("userPhone");
         String userAddress = (String) reqMap.get("userAddress");
         String userDescribe = (String) reqMap.get("userDescribe");
@@ -224,7 +224,7 @@ public class UserController {
     @ApiOperation(value = "用户修改")
     public Result updateUser(@RequestBody Map<String,Object> reqMap) throws Exception {
         Result result = new Result();
-        String username = (String) reqMap.get("username");
+        String username = (String) reqMap.get("userName");
         String userPhone = (String) reqMap.get("userPhone");
         String userAddress = (String) reqMap.get("userAddress");
         String userDescribe = (String) reqMap.get("userDescribe");

@@ -45,7 +45,11 @@
         from t_user
         where
         VALID_STATE = '1'
-        limit ${start} ${size}
+        and ROLE_TYPE = '02'
+        <if test="userPhone != null and userPhone != ''">
+            and FIND_IN_SET(#{userPhone},`USER_PHONE`)
+        </if>
+        limit ${start} , ${size}
     </select>
 
     <select id="queryUserListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
@@ -54,6 +58,7 @@
         from t_user
         where
         VALID_STATE = '1'
+        and ROLE_TYPE = '02'
     </select>
 
     <insert id="addUser" parameterType="java.util.Map">

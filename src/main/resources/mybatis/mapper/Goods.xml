@@ -30,7 +30,7 @@
         <if test="goodsName != null and goodsName !=''">
             and LOCATE(#{goodsName},t1.`GOODS_NAME`)>0
         </if>
-        limit ${start} ${size}
+        limit ${start} , ${size}
     </select>
 
     <select id="queryGoodsListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
@@ -43,7 +43,6 @@
         <if test="goodsName != null and goodsName !=''">
             and LOCATE(#{goodsName},`GOODS_NAME`)>0
         </if>
-        limit ${start} ${size}
     </select>
 
     <insert id="bugGoods" parameterType="java.util.Map">

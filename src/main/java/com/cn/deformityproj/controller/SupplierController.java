@@ -71,7 +71,7 @@ public class SupplierController {
             result.setMessage("分页参数不能为空");
             return result;
         }
-        int page = (int)reqMap.get("page");
+        int page = (int)reqMap.get("page")-1;
         int size = (int)reqMap.get("size");
         reqMap.put("start",page*size);
         try {

@@ -105,7 +105,7 @@ public class CommonUtils {
     public String dealbase64ToImagePath(String base64Str) throws Exception{
         String rtnImagePath = "";
         String getId = createAllId();
-        rtnImagePath = "C:\\Program Files\\book\\image\\"+getId+".png";
+        rtnImagePath = "C:\\Users\\JIANGCONGCONG\\Desktop\\management-disabled-master\\image\\"+getId+".png";
         base64Str = base64Str.split(",")[1];
         try{
             base64ToImage(base64Str,rtnImagePath);

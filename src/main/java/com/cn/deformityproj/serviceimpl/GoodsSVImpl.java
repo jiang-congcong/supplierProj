@@ -46,7 +46,11 @@ public class GoodsSVImpl implements IGoodsSV {
     public Map<String, Object> queryGoodsList(Map<String, Object> reqMap) throws Exception {
         Map<String, Object> goodsIdToTypeName = new HashMap<>();
         goodsIdToTypeName.put("1", "轮椅");
-        goodsIdToTypeName.put("2", "助听器");
+        goodsIdToTypeName.put("2", "假肢");
+        goodsIdToTypeName.put("3", "手杖");
+        goodsIdToTypeName.put("4", "矫形器");
+        goodsIdToTypeName.put("5", "盲人打字机");
+        goodsIdToTypeName.put("6", "助听器");
         Map<String, Object> resultMap = new HashMap<>();
         List<Map<String, Object>> resultList = new ArrayList<>();
         try {
@@ -137,7 +141,6 @@ public class GoodsSVImpl implements IGoodsSV {
         if(!StrUtil.hasEmpty(goodsImage)) {
             reqMap.put("goodsImage", commonUtils.dealbase64ToImagePath(goodsImage));
         }
-        reqMap.put("goodsPrice",new BigDecimal(Float.toString((float)reqMap.get("goodsPrice"))));
         try{
             goodsDAO.updateGoodsInfo(reqMap);
         }catch (Exception e){

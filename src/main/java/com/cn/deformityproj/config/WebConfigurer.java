@@ -2,6 +2,7 @@ package com.cn.deformityproj.config;
 
 import com.cn.deformityproj.component.SessionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author jiangcongcong
  * @date 2022/2/23 15:57
  */
+@Configuration
 public class WebConfigurer implements WebMvcConfigurer {
     /**登陆校验的拦截器注入*/
     @Autowired
